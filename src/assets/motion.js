@@ -1,37 +1,161 @@
-// Register before the first render so native page transitions can match titles.
 (() => {
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const key = "article-entrance";
   const root = document.documentElement;
-
-  function matchTitle(url, transition) {
-    if (!url) return;
-    const link = [...document.querySelectorAll(".post-title")].find(
-      (link) => link.href === url,
-    );
-    const heading = link?.closest("h3");
-    if (!heading) return;
-    heading.style.viewTransitionName = "article-title";
-    transition.finished.then(() => {
-      heading.style.removeProperty("view-transition-name");
-    });
-  }
-
-  addEventListener("pageswap", (event) => {
-    if (!event.viewTransition) return;
-    if (reducedMotion.matches) {
-      event.viewTransition.skipTransition();
-      return;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let entrance;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(key) || "null");
+    sessionStorage.removeItem(key);
+    if (
+      saved &&
+      saved.url === location.href &&
+      Date.now() - saved.time < 10000 &&
+      !reducedMotion.matches
+    ) {
+      entrance = saved;
+      root.classList.add("article-entering");
     }
-    matchTitle(event.activation?.entry?.url, event.viewTransition);
+  } catch {}
+
+  // Preserve normal links, new tabs, and browser history.
+  document.addEventListener("click", (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      reducedMotion.matches
+    )
+      return;
+    const link = event.target.closest?.(".post-title");
+    if (!link || link.target === "_blank" || link.hasAttribute("download"))
+      return;
+    const title = link.closest("h3") || link;
+    const rect = title.getBoundingClientRect();
+    const style = getComputedStyle(title);
+    try {
+      sessionStorage.setItem(
+        key,
+        JSON.stringify({
+          url: link.href,
+          time: Date.now(),
+          text: link.textContent.trim(),
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          fontSize: style.fontSize,
+          lineHeight: style.lineHeight,
+          letterSpacing: style.letterSpacing,
+          fontWeight: style.fontWeight,
+        }),
+      );
+    } catch {}
   });
 
-  addEventListener("pagereveal", (event) => {
-    if (!event.viewTransition) return;
-    if (reducedMotion.matches) {
-      event.viewTransition.skipTransition();
+  let overlay;
+  let title;
+  const animations = [];
+  function cleanup() {
+    root.classList.remove("article-entering");
+    overlay?.remove();
+    title?.style.removeProperty("visibility");
+    animations.forEach((animation) => animation.cancel());
+  }
+  const safetyTimer = entrance ? setTimeout(cleanup, 2200) : null;
+  addEventListener("pagehide", cleanup);
+  addEventListener("pageshow", (event) => {
+    if (event.persisted) cleanup();
+  });
+  reducedMotion.addEventListener("change", (event) => {
+    if (event.matches) cleanup();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!entrance || reducedMotion.matches) {
+      cleanup();
       return;
     }
-    root.classList.add("page-transition");
-    matchTitle(window.navigation?.activation?.from?.url, event.viewTransition);
+    title = document.querySelector(".post-header h1");
+    if (
+      !title ||
+      title.textContent.trim() !== entrance.text ||
+      !title.animate
+    ) {
+      cleanup();
+      return;
+    }
+    try {
+      const rect = title.getBoundingClientRect();
+      const style = getComputedStyle(title);
+      overlay = document.createElement("div");
+      overlay.className = "traveling-title";
+      overlay.setAttribute("aria-hidden", "true");
+      overlay.textContent = title.textContent;
+      const destination = {
+        left: `${rect.left}px`,
+        top: `${rect.top}px`,
+        width: `${rect.width}px`,
+        fontSize: style.fontSize,
+        fontWeight: style.fontWeight,
+        lineHeight: style.lineHeight,
+        letterSpacing: style.letterSpacing,
+      };
+      Object.assign(overlay.style, destination, {
+        fontFamily: style.fontFamily,
+        color: style.color,
+      });
+      document.body.append(overlay);
+      const titleAnimation = overlay.animate(
+        [
+          {
+            left: `${entrance.left}px`,
+            top: `${entrance.top}px`,
+            width: `${entrance.width}px`,
+            fontSize: entrance.fontSize,
+            lineHeight: entrance.lineHeight,
+            letterSpacing: entrance.letterSpacing,
+            fontWeight: entrance.fontWeight,
+          },
+          destination,
+        ],
+        { duration: 850, easing: "cubic-bezier(.65, 0, .2, 1)", fill: "both" },
+      );
+      animations.push(titleAnimation);
+      titleAnimation.finished
+        .then(() => {
+          title.style.visibility = "visible";
+          overlay.remove();
+        })
+        .catch(() => {});
+
+      for (const element of document.querySelectorAll(
+        ".post-meta, .demo-label, .post .prose, .back-link",
+      )) {
+        animations.push(
+          element.animate(
+            [
+              { opacity: 0, transform: "translateY(10px)" },
+              { opacity: 1, transform: "translateY(0)" },
+            ],
+            {
+              duration: 650,
+              delay: 650,
+              easing: "cubic-bezier(.22, 1, .36, 1)",
+              fill: "both",
+            },
+          ),
+        );
+      }
+      Promise.all(animations.map((animation) => animation.finished))
+        .then(() => {
+          clearTimeout(safetyTimer);
+          cleanup();
+        })
+        .catch(cleanup);
+    } catch {
+      cleanup();
+    }
   });
 })();

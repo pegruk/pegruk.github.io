@@ -1,43 +1,68 @@
 const { test, expect } = require("@playwright/test");
 
-test("article transition matches its title and survives back navigation", async ({
+test("title travels from its card before the article text fades in", async ({
   page,
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.addInitScript(() => {
-    addEventListener("pagereveal", (event) => {
-      if (!event.viewTransition) return;
-      event.viewTransition.ready
-        .then(() => {
-          window.transitionReady = true;
-        })
-        .catch((error) => {
-          window.transitionError = error.message;
-        });
-    });
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const result = animate.apply(this, args);
+      if (
+        this.matches(
+          ".traveling-title, .post-meta, .demo-label, .post .prose, .back-link",
+        )
+      ) {
+        result.pause();
+        result.currentTime = 0;
+      }
+      return result;
+    };
   });
   await page.goto("/");
   const title = page.getByRole("link", {
-    name: "Looking inside a model",
+    name: "Notes from building a small API",
     exact: true,
   });
+  const source = await title.locator("..").boundingBox();
   await title.click();
-  await expect(page).toHaveURL(/\/posts\/looking-inside-a-model\/$/);
-  await expect
-    .poll(() => page.evaluate(() => window.transitionReady))
-    .toBe(true);
-  expect(await page.evaluate(() => window.transitionError)).toBeUndefined();
-  await expect(page.locator(".post .prose")).toBeVisible();
+  await expect(page).toHaveURL(/\/posts\/a-small-api\/$/);
+  const movingTitle = page.locator(".traveling-title");
+  await expect(movingTitle).toBeVisible();
+  expect((await movingTitle.boundingBox()).y).toBeCloseTo(source.y, 0);
+  await expect(page.locator(".post .prose")).toHaveCSS("opacity", "0");
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => {
+      a.currentTime = 400;
+    }),
+  );
+  const halfway = (await movingTitle.boundingBox()).y;
+  const destination = await page
+    .locator(".post-header h1")
+    .evaluate((el) => el.getBoundingClientRect().top);
+  expect(halfway).toBeLessThan(source.y);
+  expect(halfway).toBeGreaterThan(destination);
+  await expect(page.locator(".post .prose")).toHaveCSS("opacity", "0");
+  await page.screenshot({ path: "/tmp/blog-title-moving.png" });
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => {
+      a.currentTime = 900;
+    }),
+  );
+  const opacity = await page
+    .locator(".post .prose")
+    .evaluate((el) => Number(getComputedStyle(el).opacity));
+  expect(opacity).toBeGreaterThan(0);
+  expect(opacity).toBeLessThan(1);
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => a.finish()),
+  );
+  await expect(movingTitle).toHaveCount(0);
+  await expect(page.locator(".post .prose")).toHaveCSS("opacity", "1");
   await page.goBack();
   await expect(title).toBeVisible();
-  await expect
-    .poll(() => page.locator('.post-list h3[style*="article-title"]').count())
-    .toBe(0);
-  await title.click();
-  await expect(page.locator(".post-header h1")).toHaveText(
-    "Looking inside a model",
-  );
+  await expect(page.locator(".traveling-title")).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
