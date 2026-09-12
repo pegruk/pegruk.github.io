@@ -1,6 +1,6 @@
 # Pegruk’s blog
 
-A static personal blog about AI safety, mechanistic interpretability, and backend development.
+A static personal blog about AI safety, mechanistic interpretability, and other things.
 
 Built with Eleventy and published through GitHub Pages.
 
