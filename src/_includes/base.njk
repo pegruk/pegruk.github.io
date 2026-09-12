@@ -7,6 +7,7 @@
   <title>{% if title %}{{ title }} — {% endif %}{{ site.name }}</title>
   <script>try{const t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}</script>
   <link rel="stylesheet" href="{{ '/assets/style.css' | url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.name }}’s blog" href="{{ '/feed.xml' | url }}">
   <script src="{{ '/assets/motion.js' | url }}"></script>
   {% if layout == 'post.njk' %}<link rel="stylesheet" href="{{ '/assets/katex/katex.min.css' | url }}">{% endif %}
   <script src="{{ '/assets/app.js' | url }}" defer></script>

@@ -1,4 +1,6 @@
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
+const { feedPlugin } = require("@11ty/eleventy-plugin-rss");
+const site = require("./src/_data/site.json");
 const markdown = require("markdown-it")({ html: true, typographer: true })
   .use(require("markdown-it-footnote"))
   .use(require("markdown-it-texmath"), {
@@ -9,6 +11,18 @@ const markdown = require("markdown-it")({ html: true, typographer: true })
 module.exports = function (config) {
   config.setLibrary("md", markdown);
   config.addPlugin(syntaxHighlight);
+  config.addPlugin(feedPlugin, {
+    type: "rss",
+    outputPath: "/feed.xml",
+    collection: { name: "feedPosts", limit: 20 },
+    metadata: {
+      language: "en",
+      title: `${site.name}’s blog`,
+      subtitle: site.description,
+      base: new URL(process.env.PATH_PREFIX || "/", site.url).href,
+      author: { name: site.name },
+    },
+  });
   config.addPassthroughCopy("src/assets");
   config.addPassthroughCopy({ "node_modules/katex/dist": "assets/katex" });
   config.addFilter("dateLabel", (date) =>
@@ -31,6 +45,13 @@ module.exports = function (config) {
       .getFilteredByGlob("src/posts/*.md")
       .filter((p) => !p.data.draft && true)
       .sort((a, b) => b.date - a.date),
+  );
+  // The RSS plugin reverses its source collection before taking the newest 20.
+  config.addCollection("feedPosts", (api) =>
+    api
+      .getFilteredByGlob("src/posts/*.md")
+      .filter((post) => !post.data.draft)
+      .sort((a, b) => a.date - b.date),
   );
   config.addCollection("categories", (api) =>
     [

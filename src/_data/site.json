@@ -1,1 +1,7 @@
-{"name":"Pegruk","description":"Notes on AI safety, mechanistic interpretability, and things I’m learning."}
+{
+  "name": "Pegruk",
+  "description": "Notes on AI safety, mechanistic interpretability, and backend development.",
+  "url": "https://pegruk.github.io/",
+  "github": "https://github.com/pegruk",
+  "welcome": "👋 Welcome to Pegruk’s blog"
+}
