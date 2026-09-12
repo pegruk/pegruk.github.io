@@ -594,6 +594,7 @@ dialog::backdrop {
 }
 .article-entering .post-meta,
 .article-entering .demo-label,
+.article-entering .post-toc,
 .article-entering .post .prose,
 .article-entering .post > .back-link,
 .article-entering [data-motion-content] {

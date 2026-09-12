@@ -155,7 +155,7 @@
       for (const element of document.querySelectorAll(
         entrance.direction === "return" || entrance.target === "all-posts"
           ? ".home-welcome, .writing"
-          : ".post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
+          : ".post-toc, .post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
       )) {
         animations.push(
           element.animate(

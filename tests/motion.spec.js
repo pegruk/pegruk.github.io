@@ -95,7 +95,7 @@ test("title travels from its card before the article text fades in", async ({
       const result = animate.apply(this, args);
       if (
         this.matches(
-          ".traveling-title, .post-meta, .demo-label, .post .prose, .back-link",
+          ".traveling-title, .post-toc, .post-meta, .demo-label, .post .prose, .back-link",
         )
       ) {
         result.pause();
@@ -117,6 +117,7 @@ test("title travels from its card before the article text fades in", async ({
   await expect(movingTitle).toBeVisible();
   expect((await movingTitle.boundingBox()).y).toBeCloseTo(source.y, 0);
   await expect(page.locator(".post .prose")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".post-toc")).toHaveCSS("opacity", "0");
   await page.evaluate(() =>
     document.getAnimations().forEach((a) => {
       a.currentTime = 400;
