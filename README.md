@@ -1,5 +1,7 @@
 # Pegruk’s blog
 
+📖 **[Guia completo de uso em português](docs/GUIA-DE-USO.md)** — do primeiro artigo à publicação no GitHub Pages.
+
 A small static blog with Markdown articles, full-text browser search, category filtering, and light/dark themes. Eleventy generates the site; GitHub Pages serves the resulting files.
 
 ## Local preview
