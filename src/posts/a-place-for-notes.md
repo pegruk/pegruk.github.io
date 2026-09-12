@@ -3,6 +3,7 @@ title: A place for unfinished thoughts
 date: 2026-09-01
 categories: [Personal]
 demo: true
+description: On keeping a space for questions before they become answers.
 ---
 This is a demonstration of a short personal post.
 

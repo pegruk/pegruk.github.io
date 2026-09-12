@@ -3,7 +3,7 @@ title: Looking inside a model
 date: 2026-09-10
 categories: [Mechanistic interpretability, AI safety]
 demo: true
-description: A demonstration of the blog’s technical writing format.
+description: From observing activations to asking what a model is actually computing.
 ---
 This is a **demonstration article**, included to preview the reading experience. It is not a claim about research I have completed.
 

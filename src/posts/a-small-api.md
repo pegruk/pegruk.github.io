@@ -3,6 +3,7 @@ title: Notes from building a small API
 date: 2026-09-06
 categories: [Backend development]
 demo: true
+description: What building a small API can teach us about contracts, errors, and clear decisions.
 ---
 This demonstration post previews a backend development note.
 
