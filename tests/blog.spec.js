@@ -45,7 +45,7 @@ test("categories filter and reset; theme persists", async ({ page }) => {
   await page.locator(".category-menu").getByText("Backend development").click();
   await expect(page.locator(".post-list li:visible")).toHaveCount(1);
   await page.locator("#filter-status a").click();
-  await expect(page.locator(".post-list li:visible")).toHaveCount(3);
+  await expect(page.locator(".post-list li:visible")).toHaveCount(4);
   await page.emulateMedia({ colorScheme: "light" });
   await page.getByRole("button", { name: "Switch to dark mode" }).click();
   await page.reload();
