@@ -13,7 +13,7 @@
 <body class="{% if page.url == '/' %}home{% else %}reading-page{% endif %}">
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="name" href="{{ '/' | url }}"><span class="brand-mark" aria-hidden="true">p.</span>{{ site.name }}</a>
+    <a class="name" href="{{ '/' | url }}">{{ site.name }}</a>
     <nav aria-label="Main navigation">
       <details class="categories"><summary>Categories</summary><div class="category-menu"><a href="{{ '/' | url }}">All posts</a>{% for category in collections.categories %}<a href="{{ '/' | url }}?category={{ category | urlencode }}">{{ category }}</a>{% endfor %}</div></details>
       <a href="{{ '/about/' | url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About me</a>
@@ -22,7 +22,7 @@
     </nav>
   </header>
   <main id="main">{{ content | safe }}</main>
-  <footer><span>{{ site.name }}<span class="footer-note">A work in progress, always.</span></span><a href="{{ '/about/' | url }}">Let’s get acquainted <span aria-hidden="true">↗</span></a></footer>
+  <footer><span>{{ site.name }}</span><span>Thoughts, notes, and work in progress.</span></footer>
   <dialog id="search-dialog" aria-labelledby="search-title" data-index="{{ '/search.json' | url }}">
     <div class="search-heading"><h2 id="search-title">Search articles</h2><button class="icon-button" id="search-close" aria-label="Close search">×</button></div>
     <label class="sr-only" for="search-input">Search titles and article text</label>
