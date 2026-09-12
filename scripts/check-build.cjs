@@ -31,6 +31,9 @@ try {
     ELEVENTY_ENV: "development",
     PATH_PREFIX: "/blog/",
   });
+  const previewIndex = JSON.parse(
+    fs.readFileSync(path.join(temp, "_site/search.json")),
+  );
   assert(
     fs.existsSync(
       path.join(temp, "_site/posts/looking-inside-a-model/index.html"),
@@ -46,7 +49,10 @@ try {
   const index = JSON.parse(
     fs.readFileSync(path.join(temp, "_site/search.json")),
   );
-  assert.equal(index.length, 5);
+  assert.deepEqual(
+    index.map((article) => article.url).sort(),
+    previewIndex.map((article) => article.url).sort(),
+  );
   const published = index.find((article) =>
     article.text.includes("Searchable body sentinel"),
   );

@@ -33,9 +33,5 @@
     }
     root.classList.add("page-transition");
     matchTitle(window.navigation?.activation?.from?.url, event.viewTransition);
-    // Keep the fallback entrance suppressed after the native transition ends.
-    event.viewTransition.finished.then(() =>
-      root.classList.add("page-revealed"),
-    );
   });
 })();
