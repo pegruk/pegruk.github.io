@@ -49,6 +49,7 @@
           url: link.href,
           time: Date.now(),
           direction: returnLink ? "return" : "forward",
+          target: link.dataset.motionTarget || null,
           text: returnLink
             ? title.textContent.trim()
             : link.dataset.motionText || link.textContent.trim(),
@@ -88,11 +89,13 @@
       return;
     }
     title =
-      entrance.direction === "return"
-        ? [...document.querySelectorAll(".post-title")]
-            .find((link) => link.textContent.trim() === entrance.text)
-            ?.closest("h3")
-        : document.querySelector(".post-header h1, [data-motion-title]");
+      entrance.target === "all-posts"
+        ? document.querySelector("#writing-title")
+        : entrance.direction === "return"
+          ? [...document.querySelectorAll(".post-title")]
+              .find((link) => link.textContent.trim() === entrance.text)
+              ?.closest("h3")
+          : document.querySelector(".post-header h1, [data-motion-title]");
     if (
       !title ||
       title.textContent.trim() !== entrance.text ||
@@ -150,7 +153,7 @@
         .catch(() => {});
 
       for (const element of document.querySelectorAll(
-        entrance.direction === "return"
+        entrance.direction === "return" || entrance.target === "all-posts"
           ? ".home-welcome, .writing"
           : ".post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
       )) {

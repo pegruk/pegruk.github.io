@@ -78,6 +78,7 @@
       const li = document.createElement("li");
       const link = document.createElement("a");
       link.href = article.url;
+      link.className = "post-title";
       link.textContent = article.title;
       const excerpt = document.createElement("p");
       const firstMatch = normalize(article.text).indexOf(words[0]);

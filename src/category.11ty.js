@@ -51,6 +51,6 @@ module.exports = class {
         return `<li><h3><a class="post-title" href="${url(post.url)}">${title}</a></h3>${description}<div class="card-meta"><time datetime="${post.date.toISOString().slice(0, 10)}">${date}</time><span class="post-category">${escapeHtml(category)}</span></div></li>`;
       })
       .join("");
-    return `<p class="categories-description">${posts.length} ${posts.length === 1 ? "post" : "posts"} in this category.</p><ul class="post-list">${cards}</ul><a class="back-link" href="${url("/")}">All posts</a>`;
+    return `<p class="categories-description">${posts.length} ${posts.length === 1 ? "post" : "posts"} in this category.</p><ul class="post-list">${cards}</ul><a class="back-link" href="${url("/")}" data-motion-link data-motion-target="all-posts">All posts</a>`;
   }
 };

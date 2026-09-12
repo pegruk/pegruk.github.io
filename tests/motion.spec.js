@@ -189,6 +189,61 @@ test("back to all posts returns the article title to its card", async ({
   await expect(page.locator(".writing")).toHaveCSS("opacity", "1");
 });
 
+test("category all-posts link moves into the home heading", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const result = animate.apply(this, args);
+      if (this.matches(".traveling-title, .home-welcome, .writing")) {
+        result.pause();
+        result.currentTime = 0;
+      }
+      return result;
+    };
+  });
+  await page.goto("/categories/backend-development/");
+  const source = await page
+    .getByRole("link", { name: "All posts", exact: true })
+    .boundingBox();
+  await page.getByRole("link", { name: "All posts", exact: true }).click();
+  await expect(page).toHaveURL("/");
+  const moving = page.locator(".traveling-title");
+  await expect(moving).toHaveText("All posts");
+  expect((await moving.boundingBox()).y).toBeCloseTo(source.y, 0);
+  await page.evaluate(() =>
+    document.getAnimations().forEach((animation) => animation.finish()),
+  );
+  await expect(page.locator("#writing-title")).toBeVisible();
+});
+
+test("search results use the article title transition", async ({ page }) => {
+  await page.addInitScript(() => {
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const result = animate.apply(this, args);
+      if (this.matches(".traveling-title")) {
+        result.pause();
+        result.currentTime = 0;
+      }
+      return result;
+    };
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Search articles" }).click();
+  await page.getByRole("searchbox").fill("small api");
+  const result = page.getByRole("link", {
+    name: "Notes from building a small API",
+    exact: true,
+  });
+  await result.click();
+  await expect(page).toHaveURL("/posts/a-small-api/");
+  await expect(page.locator(".traveling-title")).toHaveText(
+    "Notes from building a small API",
+  );
+});
+
 test("search can close during its entrance and reopen with keyboard focus", async ({
   page,
 }) => {
