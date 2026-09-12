@@ -1,5 +1,6 @@
 (() => {
   const root = document.documentElement;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const themeButton = document.querySelector("#theme-toggle");
   const systemTheme = matchMedia("(prefers-color-scheme: dark)");
   const isDark = () =>
@@ -12,12 +13,16 @@
   themeButton.hidden = false;
   updateThemeLabel();
   systemTheme.addEventListener("change", updateThemeLabel);
+  let themeTimer;
   themeButton.addEventListener("click", () => {
+    clearTimeout(themeTimer);
+    root.classList.add("theme-changing");
     root.dataset.theme = isDark() ? "light" : "dark";
     try {
       localStorage.setItem("theme", root.dataset.theme);
     } catch {}
     updateThemeLabel();
+    themeTimer = setTimeout(() => root.classList.remove("theme-changing"), 450);
   });
 
   const list = document.querySelector(".post-list");
@@ -119,14 +124,61 @@
     }
   }
   openButton.hidden = false;
+  let dialogAnimation;
+  let closing = false;
+  function closeSearch() {
+    if (closing || !dialog.open) return;
+    if (reducedMotion.matches) {
+      dialog.close();
+      return;
+    }
+    closing = true;
+    dialogAnimation?.cancel();
+    dialogAnimation = dialog.animate(
+      [
+        { opacity: 1, transform: "translateY(0) scale(1)" },
+        { opacity: 0, transform: "translateY(8px) scale(.985)" },
+      ],
+      { duration: 160, easing: "cubic-bezier(.4, 0, 1, 1)" },
+    );
+    dialogAnimation.finished
+      .then(() => {
+        dialog.close();
+        closing = false;
+      })
+      .catch(() => {
+        closing = false;
+      });
+  }
   openButton.addEventListener("click", () => {
     dialog.showModal();
+    if (!reducedMotion.matches) {
+      dialogAnimation = dialog.animate(
+        [
+          {
+            opacity: 0,
+            transform: "translateY(18px) scale(.97)",
+            filter: "blur(4px)",
+          },
+          {
+            opacity: 1,
+            transform: "translateY(0) scale(1)",
+            filter: "blur(0)",
+          },
+        ],
+        { duration: 360, easing: "cubic-bezier(.16, 1, .3, 1)" },
+      );
+    }
     input.focus();
     load();
   });
   document
     .querySelector("#search-close")
-    .addEventListener("click", () => dialog.close());
+    .addEventListener("click", closeSearch);
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeSearch();
+  });
   dialog.addEventListener("close", () => openButton.focus());
   dialog.addEventListener("click", (event) => {
     const rect = dialog.getBoundingClientRect();
@@ -137,7 +189,7 @@
         event.clientY < rect.top ||
         event.clientY > rect.bottom)
     )
-      dialog.close();
+      closeSearch();
   });
   input.addEventListener("input", search);
   retry.addEventListener("click", load);

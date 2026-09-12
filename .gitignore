@@ -2,3 +2,4 @@ node_modules/
 _site/
 playwright-report/
 test-results/
+docs/GUIA-DE-USO.md
