@@ -109,6 +109,7 @@ test("title travels from its card before the article text fades in", async ({
     name: "Notes from building a small API",
     exact: true,
   });
+  await title.scrollIntoViewIfNeeded();
   const source = await title.locator("..").boundingBox();
   await title.click();
   await expect(page).toHaveURL(/\/posts\/a-small-api\/$/);
@@ -178,10 +179,13 @@ test("back to all posts returns the article title to its card", async ({
     }),
   );
   const targetY = await page
-    .getByRole("link", { name: "Notes from building a small API", exact: true })
+    .locator(".post-list .post-title", {
+      hasText: "Notes from building a small API",
+    })
     .locator("..")
     .evaluate((el) => el.getBoundingClientRect().top);
-  expect((await moving.boundingBox()).y).toBeGreaterThan(targetY);
+  expect((await moving.boundingBox()).y).toBeLessThan(targetY);
+  expect((await moving.boundingBox()).y).toBeGreaterThan(source.y);
   await page.evaluate(() =>
     document.getAnimations().forEach((a) => a.finish()),
   );
@@ -233,7 +237,7 @@ test("search results use the article title transition", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Search articles" }).click();
   await page.getByRole("searchbox").fill("small api");
-  const result = page.getByRole("link", {
+  const result = page.locator("#search-results").getByRole("link", {
     name: "Notes from building a small API",
     exact: true,
   });
