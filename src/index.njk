@@ -1,0 +1,12 @@
+---
+layout: base.njk
+---
+<h1 class="sr-only">Writing by {{ site.name }}</h1>
+<div id="filter-status" hidden><span></span><a href="{{ '/' | url }}">All posts</a></div>
+<ul class="post-list">
+{% for post in collections.posts %}
+  <li data-categories="{{ post.data.categories | json | escape }}"><a href="{{ post.url | url }}">{{ post.data.title }}</a><time datetime="{{ post.date | isoDate }}">{{ post.date | dateLabel }}</time>{% if post.data.demo %}<span class="demo-marker">Preview</span>{% endif %}</li>
+{% endfor %}
+</ul>
+<p id="empty-posts" {% if collections.posts.length %}hidden{% endif %}>No posts yet. New writing will appear here.</p>
+<noscript><p>Browse all posts above. Enable JavaScript to filter by category or search.</p></noscript>
