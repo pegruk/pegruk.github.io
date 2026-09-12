@@ -113,15 +113,46 @@ def commit(message: str) -> None:
     run(["git", "commit", "-m", message])
 
 
+def interactive() -> None:
+    while True:
+        print("\nPegruk blog")
+        print("1. Criar novo artigo")
+        print("2. Verificar e gerar o site")
+        print("3. Criar commit")
+        print("0. Sair")
+        choice = input("Escolha uma opção: ").strip()
+        try:
+            if choice == "1":
+                create_post(input("Nome ou título do artigo: ").strip())
+            elif choice == "2":
+                publish()
+            elif choice == "3":
+                commit(input("Mensagem do commit: ").strip())
+            elif choice == "0":
+                print("Até mais!")
+                return
+            else:
+                print("Opção inválida.")
+        except (EOFError, KeyboardInterrupt):
+            print("\nAté mais!")
+            return
+        except SystemExit as error:
+            if error.code not in (None, 0):
+                print(f"Erro: {error}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ferramentas para manter o blog")
-    commands = parser.add_subparsers(dest="command", required=True)
+    commands = parser.add_subparsers(dest="command")
     create = commands.add_parser("create", help="cria um novo artigo")
     create.add_argument("name", help="nome ou título do artigo")
     commands.add_parser("publish", help="testa e gera o site estático")
     commit_parser = commands.add_parser("commit", help="revisa e cria um commit")
     commit_parser.add_argument("message", help="mensagem do commit")
     args = parser.parse_args()
+    if args.command is None:
+        interactive()
+        return
     if args.command == "create":
         create_post(args.name)
     elif args.command == "publish":

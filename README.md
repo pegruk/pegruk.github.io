@@ -12,6 +12,8 @@ Built with Eleventy and published through GitHub Pages.
 
 ## Post helper
 
+Run `python3 scripts/blog.py` to open the interactive menu.
+
 Use `python3 scripts/blog.py create "My new article"` to create a post and choose its category.
 
 Use `python3 scripts/blog.py publish` to run the checks and generate the production site.
