@@ -54,6 +54,36 @@ for (const [label, path] of [
   });
 }
 
+test("a category name moves into its category page title", async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const animation = original.apply(this, args);
+      if (this.matches(".traveling-title, [data-motion-content]")) {
+        animation.pause();
+        animation.currentTime = 0;
+      }
+      return animation;
+    };
+  });
+  await page.goto("/categories/");
+  const link = page.getByRole("link", { name: "Backend development 1 post" });
+  const source = await link.boundingBox();
+  await link.click();
+  await expect(page).toHaveURL("/categories/backend-development/");
+  const moving = page.locator(".traveling-title");
+  await expect(moving).toHaveText("Backend development");
+  expect((await moving.boundingBox()).x).toBeCloseTo(source.x, 0);
+  await expect(page.locator("[data-motion-content]")).toHaveCSS("opacity", "0");
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => a.finish()),
+  );
+  await expect(page.locator("[data-motion-title]")).toHaveText(
+    "Backend development",
+  );
+  await expect(page.locator(".post-list li")).toHaveCount(1);
+});
+
 test("title travels from its card before the article text fades in", async ({
   page,
 }) => {
@@ -118,6 +148,45 @@ test("title travels from its card before the article text fades in", async ({
   await expect(title).toBeVisible();
   await expect(page.locator(".traveling-title")).toHaveCount(0);
   expect(errors).toEqual([]);
+});
+
+test("back to all posts returns the article title to its card", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const result = animate.apply(this, args);
+      if (this.matches(".traveling-title, .home-welcome, .writing")) {
+        result.pause();
+        result.currentTime = 0;
+      }
+      return result;
+    };
+  });
+  await page.goto("/posts/a-small-api/");
+  const source = await page.locator(".post-header h1").boundingBox();
+  await page.getByRole("link", { name: "Back to all posts" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  const moving = page.locator(".traveling-title");
+  await expect(moving).toHaveText("Notes from building a small API");
+  expect((await moving.boundingBox()).y).toBeCloseTo(source.y, 0);
+  await expect(page.locator(".writing")).toHaveCSS("opacity", "0");
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => {
+      a.currentTime = 500;
+    }),
+  );
+  const targetY = await page
+    .getByRole("link", { name: "Notes from building a small API", exact: true })
+    .locator("..")
+    .evaluate((el) => el.getBoundingClientRect().top);
+  expect((await moving.boundingBox()).y).toBeGreaterThan(targetY);
+  await page.evaluate(() =>
+    document.getAnimations().forEach((a) => a.finish()),
+  );
+  await expect(moving).toHaveCount(0);
+  await expect(page.locator(".writing")).toHaveCSS("opacity", "1");
 });
 
 test("search can close during its entrance and reopen with keyboard focus", async ({

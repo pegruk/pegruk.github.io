@@ -39,18 +39,18 @@ test("search recovers from a failed index request", async ({ page }) => {
   await page.getByRole("searchbox").fill("model");
   await expect(page.locator("#search-results a")).toHaveCount(1);
 });
-test("categories filter and reset; theme persists", async ({ page }) => {
+test("categories open their own pages; theme persists", async ({ page }) => {
   await page.goto("/");
-  const articleCount = await page.locator(".post-list li:visible").count();
   await page.getByRole("link", { name: "Categories", exact: true }).click();
   await expect(page).toHaveURL(/\/categories\/$/);
   await page
     .locator(".category-list")
     .getByRole("link", { name: "Backend development 1 post" })
     .click();
+  await expect(page).toHaveURL(/\/categories\/backend-development\/$/);
   await expect(page.locator(".post-list li:visible")).toHaveCount(1);
-  await page.locator("#filter-status a").click();
-  await expect(page.locator(".post-list li:visible")).toHaveCount(articleCount);
+  await page.getByRole("link", { name: "All posts", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
   await page.emulateMedia({ colorScheme: "light" });
   await page.getByRole("button", { name: "Switch to dark mode" }).click();
   await page.reload();

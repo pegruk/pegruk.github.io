@@ -29,10 +29,17 @@
       reducedMotion.matches
     )
       return;
-    const link = event.target.closest?.(".post-title, [data-motion-link]");
+    const link = event.target.closest?.(
+      ".post-title, [data-motion-link], [data-return-link]",
+    );
     if (!link || link.target === "_blank" || link.hasAttribute("download"))
       return;
-    const title = link.closest("h3") || link;
+    const returnLink = link.matches("[data-return-link]");
+    if (returnLink) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const title = returnLink
+      ? document.querySelector(".post-header h1")
+      : link.closest("h3") || link;
+    if (!title) return;
     const rect = title.getBoundingClientRect();
     const style = getComputedStyle(title);
     try {
@@ -41,7 +48,10 @@
         JSON.stringify({
           url: link.href,
           time: Date.now(),
-          text: link.textContent.trim(),
+          direction: returnLink ? "return" : "forward",
+          text: returnLink
+            ? title.textContent.trim()
+            : link.dataset.motionText || link.textContent.trim(),
           left: rect.left,
           top: rect.top,
           width: rect.width,
@@ -77,7 +87,12 @@
       cleanup();
       return;
     }
-    title = document.querySelector(".post-header h1, [data-motion-title]");
+    title =
+      entrance.direction === "return"
+        ? [...document.querySelectorAll(".post-title")]
+            .find((link) => link.textContent.trim() === entrance.text)
+            ?.closest("h3")
+        : document.querySelector(".post-header h1, [data-motion-title]");
     if (
       !title ||
       title.textContent.trim() !== entrance.text ||
@@ -87,8 +102,12 @@
       return;
     }
     try {
+      if (entrance.direction === "return") {
+        title.scrollIntoView({ block: "center", inline: "nearest" });
+      }
       const rect = title.getBoundingClientRect();
       const style = getComputedStyle(title);
+      title.style.visibility = "hidden";
       overlay = document.createElement("div");
       overlay.className = "traveling-title";
       overlay.setAttribute("aria-hidden", "true");
@@ -131,7 +150,9 @@
         .catch(() => {});
 
       for (const element of document.querySelectorAll(
-        ".post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
+        entrance.direction === "return"
+          ? ".home-welcome, .writing"
+          : ".post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
       )) {
         animations.push(
           element.animate(

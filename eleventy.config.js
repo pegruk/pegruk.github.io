@@ -37,6 +37,14 @@ module.exports = function (config) {
     new Date(date).toISOString().slice(0, 10),
   );
   config.addFilter("json", (value) => JSON.stringify(value));
+  config.addFilter("categorySlug", (value) =>
+    value
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, ""),
+  );
   config.addFilter("inCategory", (posts, category) =>
     posts.filter((post) => (post.data.categories || []).includes(category)),
   );

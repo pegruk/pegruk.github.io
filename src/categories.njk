@@ -8,7 +8,7 @@ permalink: /categories/
 <ul class="category-list">
 {% for category in collections.categories %}
   {% set posts = collections.posts | inCategory(category) %}
-  <li><a href="{{ '/' | url }}?category={{ category | urlencode }}"><span>{{ category }}</span><span class="category-count">{{ posts.length }} {% if posts.length == 1 %}post{% else %}posts{% endif %}</span></a></li>
+  <li><a href="{{ ('/categories/' + (category | categorySlug) + '/') | url }}" data-motion-link data-motion-text="{{ category }}"><span>{{ category }}</span><span class="category-count">{{ posts.length }} {% if posts.length == 1 %}post{% else %}posts{% endif %}</span></a></li>
 {% else %}
   <li class="categories-empty">Categories will appear here when articles are published.</li>
 {% endfor %}
