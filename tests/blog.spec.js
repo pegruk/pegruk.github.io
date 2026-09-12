@@ -76,10 +76,13 @@ test("technical articles render and respect reduced motion on mobile", async ({
     fullPage: true,
   });
 });
-test("article content is available without JavaScript", async ({ browser }) => {
+test("article content is available without JavaScript", async ({
+  browser,
+  baseURL,
+}) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto("http://localhost:8080/posts/looking-inside-a-model/");
+  await page.goto(`${baseURL}/posts/looking-inside-a-model/`);
   await expect(
     page.getByRole("heading", { name: "From predictions to mechanisms" }),
   ).toBeVisible();
