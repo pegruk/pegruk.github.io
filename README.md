@@ -1,3 +1,3 @@
 # Blog
 
-Um espaço pessoal para publicar notas, ideias e aprendizados sobre AI Safety, mechanistic interpretability e outros assuntos.
+A personal space for notes, ideas, and things I’m learning about AI safety, mechanistic interpretability, and other topics.
