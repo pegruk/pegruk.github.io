@@ -7,6 +7,7 @@ layout: base.njk
     <p class="post-meta"><time datetime="{{ date | isoDate }}">{{ date | dateLabel }}</time>{% for category in categories %}<a href="{{ ('/categories/' + (category | categorySlug) + '/') | url }}" data-motion-link>{{ category }}</a>{% endfor %}</p>
     {% if demo %}<p class="demo-label">Demonstration post</p>{% endif %}
   </header>
+  {{ content | toc | safe }}
   <div class="prose">{{ content | safe }}</div>
   <a class="back-link" href="{{ '/' | url }}" data-return-link>Back to all posts</a>
 </article>

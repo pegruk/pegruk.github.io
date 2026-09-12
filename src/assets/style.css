@@ -265,6 +265,40 @@ h3 {
     border-color 0.18s,
     box-shadow 0.18s;
 }
+.post-toc {
+  margin: 0 0 32px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.post-toc summary {
+  padding: 14px 18px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.post-toc nav {
+  display: block;
+  padding: 0 18px 16px;
+  font-size: 14px;
+}
+.post-toc ol {
+  margin: 0;
+  padding-left: 22px;
+}
+.post-toc li {
+  margin: 5px 0;
+}
+.post-toc .toc-level-3 {
+  padding-left: 16px;
+}
+.post-toc a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.post-toc a:hover {
+  color: var(--accent);
+}
 .post-list li:hover {
   border-color: var(--hover-border);
   box-shadow: 0 4px 20px #18223609;

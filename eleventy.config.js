@@ -8,6 +8,20 @@ const markdown = require("markdown-it")({ html: true, typographer: true })
     delimiters: "dollars",
     katexOptions: { throwOnError: false },
   });
+markdown.renderer.rules.heading_open = (tokens, index, options, env, self) => {
+  const token = tokens[index];
+  const heading = tokens[index + 1];
+  if (heading?.type === "inline") {
+    const slug = heading.content
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    token.attrSet("id", slug || `section-${index}`);
+  }
+  return self.renderToken(tokens, index, options);
+};
 module.exports = function (config) {
   config.setLibrary("md", markdown);
   config.addPlugin(syntaxHighlight);
@@ -48,6 +62,19 @@ module.exports = function (config) {
   config.addFilter("inCategory", (posts, category) =>
     posts.filter((post) => (post.data.categories || []).includes(category)),
   );
+  config.addFilter("toc", (html) => {
+    const entries = [
+      ...html.matchAll(/<h([2-3]) id="([^"]+)">([\s\S]*?)<\/h\1>/g),
+    ];
+    if (!entries.length) return "";
+    const items = entries
+      .map(
+        ([, level, id, label]) =>
+          `<li class="toc-level-${level}"><a href="#${id}">${label.replace(/<[^>]*>/g, "")}</a></li>`,
+      )
+      .join("");
+    return `<details class="post-toc"><summary>Table of contents</summary><nav aria-label="Table of contents"><ol>${items}</ol></nav></details>`;
+  });
   config.addCollection("posts", (api) =>
     api
       .getFilteredByGlob("src/posts/*.md")

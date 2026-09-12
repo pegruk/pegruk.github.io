@@ -63,6 +63,13 @@ test("technical articles render and respect reduced motion on mobile", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/posts/looking-inside-a-model/");
   await expect(page.locator("h1")).toHaveText("Looking inside a model");
+  await expect(page.locator(".post-toc summary")).toHaveText(
+    "Table of contents",
+  );
+  await expect(page.locator(".post-toc a")).toHaveText([
+    "From predictions to mechanisms",
+    "A small technical example",
+  ]);
   await expect(page.locator(".katex").first()).toBeVisible();
   await expect(page.locator('link[href*="katex.min.css"]')).toHaveCount(1);
   await expect(page.locator("pre .token").first()).toBeVisible();
