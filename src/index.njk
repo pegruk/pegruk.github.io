@@ -9,7 +9,7 @@ layout: base.njk
   <li data-categories="{{ post.data.categories | json | escape }}">
     <h3><a class="post-title" href="{{ post.url | url }}">{{ post.data.title }}</a></h3>
     {% if post.data.description %}<p class="post-excerpt">{{ post.data.description }}</p>{% endif %}
-    <div class="card-meta"><time datetime="{{ post.date | isoDate }}">{{ post.date | dateLabel }}</time><span class="post-category">{{ post.data.categories[0] }}</span>{% if post.data.demo %}<span class="demo-marker">Sample</span>{% endif %}</div>
+    <div class="card-meta"><time datetime="{{ post.date | isoDate }}">{{ post.date | dateLabel }}</time><span class="post-category">{{ post.data.categories[0] }}</span></div>
   </li>
 {% endfor %}
 </ul>

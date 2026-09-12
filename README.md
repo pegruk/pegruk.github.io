@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:8080. The local preview includes three clearly labeled demonstration posts. They are excluded from production, as are drafts.
+Open http://localhost:8080. The preview includes the articles in `src/posts/`. Only articles marked with `draft: true` are excluded from production.
 
 ```sh
 npm run build
@@ -37,7 +37,7 @@ draft: false
 Your writing goes here.
 ```
 
-The filename determines the permanent URL: `/posts/my-first-post/`. Keep it unchanged after publishing to preserve links. Dates use `YYYY-MM-DD`; posts appear newest first. Categories are an array of names and populate the Categories menu automatically. Use `draft: true` to exclude a post from all generated pages and search. `demo: true` is reserved for examples visible only in development. Future dates are not a scheduling mechanism.
+The filename determines the permanent URL: `/posts/my-first-post/`. Keep it unchanged after publishing to preserve links. Dates use `YYYY-MM-DD`; posts appear newest first. Categories are an array of names and populate the Categories menu automatically. Use `draft: true` to exclude a post from all generated pages and search. Future dates are not a scheduling mechanism.
 
 Use ordinary Markdown for links, images, tables, and fenced code blocks with a language name. Use `[^1]` and a corresponding footnote definition for footnotes. Inline math uses `$y = Wx + b$`; display equations use `$$` on separate lines. Prism highlights code and KaTeX renders equations during the build.
 

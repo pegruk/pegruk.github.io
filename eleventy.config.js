@@ -29,7 +29,7 @@ module.exports = function (config) {
       .filter(
         (p) =>
           !p.data.draft &&
-          (process.env.ELEVENTY_ENV !== "production" || !p.data.demo),
+          true,
       )
       .sort((a, b) => b.date - a.date),
   );
@@ -41,7 +41,7 @@ module.exports = function (config) {
           .filter(
             (p) =>
               !p.data.draft &&
-              (process.env.ELEVENTY_ENV !== "production" || !p.data.demo),
+              true,
           )
           .flatMap((p) => p.data.categories || []),
       ),

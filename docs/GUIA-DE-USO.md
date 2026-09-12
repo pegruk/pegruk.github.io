@@ -186,7 +186,7 @@ O bloco entre as duas linhas `---` deve ficar no começo do arquivo. Ele é cham
 | `categories` | Lista de categorias; use a mesma grafia nos artigos relacionados |
 | `description` | Resumo mostrado no cartão da página inicial e na descrição HTML da página |
 | `draft` | `true` para ocultar o artigo; `false` para permitir sua geração |
-| `demo` | Reservado a exemplos locais; omita em artigos reais |
+| `demo` | Opcional; identifica um artigo de exemplo na prévia |
 
 Use aspas em títulos e descrições, especialmente quando houver dois-pontos. Escreva `true` e `false` sem aspas. Para um artigo normal, preencha título, data, categorias e descrição.
 
@@ -401,7 +401,7 @@ Os três exemplos originais usam:
 demo: true
 ```
 
-Eles aparecem na prévia local com identificação de exemplo, mas não entram no build de produção. Ao copiar um exemplo para criar seu artigo, remova `demo: true`.
+Eles aparecem na prévia e também no build de produção. O campo apenas identifica um artigo de exemplo; ao copiar um exemplo para criar seu artigo, remova `demo: true` se não quiser a identificação.
 
 Se quiser manter um texto de exemplo como artigo real, revise o conteúdo, remova os avisos de demonstração no corpo e retire `demo: true`. Os testes de interface atuais usam os exemplos originais como referências; veja a seção de verificações antes de removê-los.
 
@@ -537,7 +537,7 @@ A automação instala dependências, verifica o build, gera o site e publica `_s
 
 Abra o endereço informado em **Settings → Pages** ou no resultado da publicação. Verifique a página inicial, um artigo, uma imagem e a busca.
 
-Os exemplos locais não aparecerão. Se você ainda não tiver nenhum artigo real com `draft: false`, a página inicial mostrará a mensagem de que ainda não há publicações.
+Os artigos marcados como exemplos continuarão disponíveis. Se você ainda não tiver nenhum artigo com `draft: false`, a página inicial mostrará a mensagem de que ainda não há publicações.
 
 ## 11. Publicar novos artigos e correções
 
@@ -569,7 +569,7 @@ Pare a prévia com **Ctrl+C** antes de executar:
 npm run build
 ```
 
-O comando deve terminar sem erros. Ele limpa `_site/` e gera a versão publicada, sem rascunhos ou exemplos. Isso também remove os exemplos da saída que o servidor de prévia usava; execute `npm run dev` novamente quando quiser voltar à revisão local.
+O comando deve terminar sem erros. Ele limpa `_site/` e gera a versão publicada, sem rascunhos. Os artigos de exemplo também são gerados; execute `npm run dev` novamente quando quiser voltar à revisão local.
 
 ### Passo 4 — Revisar as mudanças
 
@@ -652,7 +652,7 @@ Para alterações apenas no conteúdo, revise no navegador e execute `npm run bu
 | Comando | O que faz |
 | --- | --- |
 | `npm run build` | Gera a versão de produção e limpa a saída anterior |
-| `npm run test:build` | Verifica exclusão de rascunhos/exemplos e URLs na raiz e em subdiretórios, em uma cópia temporária |
+| `npm run test:build` | Verifica exclusão de rascunhos e URLs na raiz e em subdiretórios, em uma cópia temporária |
 | `npm test` | Abre testes automatizados no Chromium para busca, categorias, tema e leitura |
 | `npm run format` | Reescreve a formatação dos arquivos JavaScript e CSS incluídos no script |
 
@@ -674,7 +674,7 @@ O comando de formatação altera arquivos; depois de usá-lo, confira `git diff`
 | Comando não encontra `package.json` | Execute dentro da pasta do projeto |
 | Porta ocupada | Reutilize a prévia existente ou use `npm run dev -- --port=8082` |
 | Artigo não aparece nem localmente | Extensão `.md`, pasta `src/posts/`, metadados válidos e `draft: false` |
-| Artigo aparece localmente, mas não publicado | Remova `demo: true` do artigo real e confira commit, push e Actions |
+| Artigo aparece localmente, mas não publicado | Confira `draft: false`, commit, push e Actions |
 | Artigo ainda aparece após virar rascunho | Reinicie a prévia após um build limpo; a geração incremental pode deixar uma página antiga em `_site/` |
 | Build acusa erro de YAML | Confira os delimitadores `---`, aspas e estrutura de `categories` |
 | Imagem funciona localmente, mas não no Pages | Confira maiúsculas/minúsculas, se o arquivo foi enviado e se o link usa o filtro `url` |

@@ -38,7 +38,7 @@ try {
   );
   run("scripts/build.cjs", { PATH_PREFIX: "/blog/" });
   assert(
-    !fs.existsSync(
+    fs.existsSync(
       path.join(temp, "_site/posts/looking-inside-a-model/index.html"),
     ),
   );
@@ -46,9 +46,11 @@ try {
   const index = JSON.parse(
     fs.readFileSync(path.join(temp, "_site/search.json")),
   );
-  assert.equal(index.length, 1);
-  assert.equal(index[0].url, "/blog/posts/published/");
-  assert(index[0].text.includes("Searchable body sentinel"));
+  assert.equal(index.length, 5);
+  const published = index.find((article) =>
+    article.text.includes("Searchable body sentinel"),
+  );
+  assert.equal(published.url, "/blog/posts/published/");
   const html = fs.readFileSync(
     path.join(temp, "_site/posts/published/index.html"),
     "utf8",
@@ -58,8 +60,13 @@ try {
   assert(html.includes("/blog/assets/katex/katex.min.css"));
   assert(fs.existsSync(path.join(temp, "_site/assets/katex/katex.min.css")));
   run("scripts/build.cjs", { PATH_PREFIX: "/" });
+  const rootIndex = JSON.parse(
+    fs.readFileSync(path.join(temp, "_site/search.json")),
+  );
   assert.equal(
-    JSON.parse(fs.readFileSync(path.join(temp, "_site/search.json")))[0].url,
+    rootIndex.find((article) =>
+      article.text.includes("Searchable body sentinel"),
+    ).url,
     "/posts/published/",
   );
   console.log(
