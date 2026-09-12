@@ -6,7 +6,8 @@
     "dev": "eleventy --serve",
     "build": "node scripts/build.cjs",
     "test": "playwright test",
-    "format": "prettier --write src/assets/*.js src/assets/*.css *.js scripts/*.cjs tests/*.js"
+    "format": "prettier --write src/assets/*.js src/assets/*.css *.js scripts/*.cjs tests/*.js",
+    "test:build": "node scripts/check-build.cjs"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@playwright/test": "^1.63.0",
     "katex": "^0.18.7",
+    "markdown-it": "^15.0.2",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-texmath": "^1.0.0",
     "prettier": "^3.9.6"
