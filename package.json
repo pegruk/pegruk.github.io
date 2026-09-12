@@ -4,8 +4,9 @@
   "description": "Pegruk’s writing and portfolio",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "ELEVENTY_ENV=production eleventy",
-    "test": "playwright test"
+    "build": "node scripts/build.cjs",
+    "test": "playwright test",
+    "format": "prettier --write src/assets/*.js src/assets/*.css *.js scripts/*.cjs tests/*.js"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +18,8 @@
     "@playwright/test": "^1.63.0",
     "katex": "^0.18.7",
     "markdown-it-footnote": "^4.0.0",
-    "markdown-it-texmath": "^1.0.0"
+    "markdown-it-texmath": "^1.0.0",
+    "prettier": "^3.9.6"
   },
   "private": true
 }
