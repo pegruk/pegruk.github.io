@@ -1,14 +1,8 @@
 ---
 layout: base.njk
 ---
-<section class="introduction" aria-labelledby="intro-title">
-  <h1 id="intro-title">Hi, I’m {{ site.name }}.</h1>
-  <p>I study AI safety, especially mechanistic interpretability.<br class="desktop-break"> I’m also learning backend development and building things along the way.</p>
-  <p class="intro-note">This is where I share what I’m learning.</p>
-  <a class="intro-about" href="{{ '/about/' | url }}">More about me <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-</section>
 <section class="writing" aria-labelledby="writing-title">
-<div class="section-heading"><h2 id="writing-title">Latest writing</h2><span>Notes & essays</span></div>
+<div class="section-heading"><h1 id="writing-title">Latest writing</h1><span>Notes & essays</span></div>
 <div id="filter-status" hidden><span></span><a href="{{ '/' | url }}">All posts</a></div>
 <ul class="post-list">
 {% for post in collections.posts %}

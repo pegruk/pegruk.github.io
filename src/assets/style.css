@@ -162,7 +162,7 @@ footer {
   margin-inline: auto;
 }
 main {
-  margin-top: 54px;
+  margin-top: 32px;
   min-height: 60vh;
 }
 h1,
@@ -184,39 +184,7 @@ h2 {
 h3 {
   font-size: 21px;
 }
-.introduction {
-  padding: 5px 0 49px;
-}
-.introduction h1 {
-  font-size: 35px;
-  letter-spacing: -1px;
-  margin-bottom: 18px;
-}
-.introduction p {
-  margin: 0 0 10px;
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.85;
-}
-.introduction .intro-note {
-  margin-bottom: 19px;
-}
-.intro-about {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
-}
-.intro-about:hover {
-  text-decoration: underline;
-}
-.intro-about svg {
-  width: 17px;
-  height: 17px;
-}
+
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -224,7 +192,7 @@ h3 {
   gap: 16px;
   margin-bottom: 17px;
 }
-.section-heading h2 {
+.section-heading h1 {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0;
@@ -612,19 +580,7 @@ dialog::backdrop {
   .reading-page main {
     margin-top: 32px;
   }
-  .introduction {
-    padding-bottom: 34px;
-  }
-  .introduction h1 {
-    font-size: 30px;
-  }
-  .introduction p {
-    font-size: 15px;
-    line-height: 1.8;
-  }
-  .desktop-break {
-    display: none;
-  }
+
   .post-list {
     gap: 14px;
   }

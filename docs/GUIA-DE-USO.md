@@ -51,7 +51,7 @@ O visual é inspirado no PaperMod, mas o projeto usa Eleventy, não Hugo. Instru
 | `src/assets/` | Imagens, CSS e JavaScript |
 | `src/about.md` | Conteúdo da página “About me” |
 | `src/_data/site.json` | Nome e descrição padrão do blog |
-| `src/index.njk` | Introdução e estrutura da página inicial |
+| `src/index.njk` | Lista de artigos e estrutura da página inicial |
 | `src/_includes/base.njk` | Cabeçalho, navegação, rodapé e busca |
 | `src/_includes/post.njk` | Estrutura compartilhada dos artigos |
 | `src/assets/style.css` | Aparência, responsividade e temas |
@@ -437,9 +437,9 @@ Edite `src/about.md`, mantendo o bloco inicial de metadados e a estrutura HTML e
 
 Substitua os endereços pelos seus links reais.
 
-### Introdução da página inicial
+### Página inicial
 
-Edite os textos da seção `introduction` em `src/index.njk`. Preserve as marcações do template, como `{{ site.name }}`, e os identificadores usados pela busca e pelo filtro.
+A página inicial começa diretamente pela lista de artigos. A apresentação pessoal fica em `src/about.md`. Para ajustar o título da listagem ou a estrutura dos cartões, edite `src/index.njk`, preservando os identificadores usados pela busca e pelo filtro.
 
 ### Aparência
 
