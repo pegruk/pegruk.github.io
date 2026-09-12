@@ -1,5 +1,59 @@
 const { test, expect } = require("@playwright/test");
 
+for (const [label, path] of [
+  ["About me", "/about/"],
+  ["Categories", "/categories/"],
+]) {
+  test(`${label} moves its navigation label into the page title before revealing content`, async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      const original = Element.prototype.animate;
+      Element.prototype.animate = function (...args) {
+        const animation = original.apply(this, args);
+        if (this.matches(".traveling-title, [data-motion-content]")) {
+          animation.pause();
+          animation.currentTime = 0;
+        }
+        return animation;
+      };
+    });
+    await page.goto("/");
+    const link = page.getByRole("link", { name: label, exact: true });
+    const source = await link.boundingBox();
+    await link.click();
+    await expect(page).toHaveURL(path);
+    const moving = page.locator(".traveling-title");
+    await expect(moving).toHaveText(label);
+    expect((await moving.boundingBox()).x).toBeCloseTo(source.x, 0);
+    await expect(page.locator("[data-motion-content]")).toHaveCSS(
+      "opacity",
+      "0",
+    );
+    await page.evaluate(() =>
+      document.getAnimations().forEach((a) => {
+        a.currentTime = 400;
+      }),
+    );
+    expect((await moving.boundingBox()).x).toBeLessThan(source.x);
+    await expect(page.locator("[data-motion-content]")).toHaveCSS(
+      "opacity",
+      "0",
+    );
+    await page.evaluate(() =>
+      document.getAnimations().forEach((a) => a.finish()),
+    );
+    await expect(page.locator("[data-motion-title]")).toBeVisible();
+    await expect(page.locator("[data-motion-content]")).toHaveCSS(
+      "opacity",
+      "1",
+    );
+    await page.reload();
+    await expect(page.locator("[data-motion-title]")).toBeVisible();
+    await expect(moving).toHaveCount(0);
+  });
+}
+
 test("title travels from its card before the article text fades in", async ({
   page,
 }) => {

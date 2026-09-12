@@ -29,7 +29,7 @@
       reducedMotion.matches
     )
       return;
-    const link = event.target.closest?.(".post-title");
+    const link = event.target.closest?.(".post-title, [data-motion-link]");
     if (!link || link.target === "_blank" || link.hasAttribute("download"))
       return;
     const title = link.closest("h3") || link;
@@ -77,7 +77,7 @@
       cleanup();
       return;
     }
-    title = document.querySelector(".post-header h1");
+    title = document.querySelector(".post-header h1, [data-motion-title]");
     if (
       !title ||
       title.textContent.trim() !== entrance.text ||
@@ -131,7 +131,7 @@
         .catch(() => {});
 
       for (const element of document.querySelectorAll(
-        ".post-meta, .demo-label, .post .prose, .back-link",
+        ".post-meta, .demo-label, .post .prose, .post > .back-link, [data-motion-content]",
       )) {
         animations.push(
           element.animate(

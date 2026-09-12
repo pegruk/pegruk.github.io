@@ -63,6 +63,18 @@ try {
   );
   assert(html.includes("/blog/assets/style.css"));
   assert(html.includes("/blog/assets/app.js"));
+  const categories = fs.readFileSync(
+    path.join(temp, "_site/categories/index.html"),
+    "utf8",
+  );
+  assert(categories.includes("/blog/?category=Testing"));
+  assert(categories.includes("1 post"));
+  const about = fs.readFileSync(
+    path.join(temp, "_site/about/index.html"),
+    "utf8",
+  );
+  assert(about.includes("data-motion-title>About me</h1>"));
+  assert(about.includes("/blog/categories/"));
   assert(html.includes("/blog/assets/katex/katex.min.css"));
   assert(fs.existsSync(path.join(temp, "_site/assets/katex/katex.min.css")));
   run("scripts/build.cjs", { PATH_PREFIX: "/" });

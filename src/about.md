@@ -1,11 +1,9 @@
 ---
-layout: base.njk
+layout: page.njk
 title: About me
 permalink: /about/
 ---
 <div class="prose about">
-
-# About me
 
 I’m Pegruk. I’m studying AI safety, with a particular interest in mechanistic interpretability: understanding what happens inside neural networks and how they arrive at their outputs.
 

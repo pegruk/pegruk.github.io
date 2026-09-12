@@ -16,8 +16,8 @@
   <header class="site-header">
     <a class="name" href="{{ '/' | url }}">{{ site.name }}</a>
     <nav aria-label="Main navigation">
-      <details class="categories"><summary>Categories</summary><div class="category-menu"><a href="{{ '/' | url }}">All posts</a>{% for category in collections.categories %}<a href="{{ '/' | url }}?category={{ category | urlencode }}">{{ category }}</a>{% endfor %}</div></details>
-      <a href="{{ '/about/' | url }}" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About me</a>
+      <a href="{{ '/categories/' | url }}" data-motion-link {% if page.url == '/categories/' %}aria-current="page"{% endif %}>Categories</a>
+      <a href="{{ '/about/' | url }}" data-motion-link {% if page.url == '/about/' %}aria-current="page"{% endif %}>About me</a>
       <button class="icon-button" id="theme-toggle" aria-label="Switch color theme" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/></svg></button>
       <button class="icon-button" id="search-open" aria-label="Search articles" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
     </nav>

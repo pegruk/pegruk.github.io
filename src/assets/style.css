@@ -126,37 +126,46 @@ nav a[aria-current] {
   width: 20px;
   height: 20px;
 }
-.categories {
-  position: relative;
+.categories-description {
+  color: var(--muted);
+  margin: 0 0 26px;
+  font-size: 16px;
 }
-.categories summary {
+.category-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
 }
-.categories summary::-webkit-details-marker {
-  display: none;
-}
-.categories summary:hover {
-  color: var(--accent);
-}
-.category-menu {
-  position: absolute;
-  top: 36px;
-  right: 0;
-  z-index: 3;
+.category-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 7px;
-  min-width: 220px;
-  box-shadow: 0 12px 35px #00000012;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
-.category-menu a {
-  display: block;
-  padding: 8px 12px;
-  border-radius: 5px;
-}
-.category-menu a:hover {
+.category-list a:hover {
+  border-color: var(--hover-border);
   background: var(--soft);
+}
+.category-count {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.categories-empty {
+  color: var(--muted);
 }
 main,
 footer {
@@ -512,13 +521,15 @@ dialog::backdrop {
   background: var(--surface);
   z-index: 5;
 }
-.article-entering .post-header h1 {
+.article-entering .post-header h1,
+.article-entering [data-motion-title] {
   visibility: hidden;
 }
 .article-entering .post-meta,
 .article-entering .demo-label,
 .article-entering .post .prose,
-.article-entering .back-link {
+.article-entering .post > .back-link,
+.article-entering [data-motion-content] {
   opacity: 0;
 }
 .traveling-title {
@@ -543,22 +554,6 @@ dialog::backdrop {
 }
 [data-theme="dark"] #theme-toggle svg {
   transform: rotate(180deg);
-}
-.category-menu {
-  transform-origin: top right;
-}
-.categories[open] .category-menu {
-  animation: menu-arrive 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes menu-arrive {
-  from {
-    opacity: 0;
-    transform: translateY(-5px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,

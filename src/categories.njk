@@ -1,0 +1,16 @@
+---
+layout: page.njk
+title: Categories
+description: Browse articles by topic.
+permalink: /categories/
+---
+<p class="categories-description">Browse the things I’m writing about.</p>
+<ul class="category-list">
+{% for category in collections.categories %}
+  {% set posts = collections.posts | inCategory(category) %}
+  <li><a href="{{ '/' | url }}?category={{ category | urlencode }}"><span>{{ category }}</span><span class="category-count">{{ posts.length }} {% if posts.length == 1 %}post{% else %}posts{% endif %}</span></a></li>
+{% else %}
+  <li class="categories-empty">Categories will appear here when articles are published.</li>
+{% endfor %}
+</ul>
+<a class="back-link" href="{{ '/' | url }}">All posts</a>

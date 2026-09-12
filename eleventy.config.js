@@ -23,14 +23,13 @@ module.exports = function (config) {
     new Date(date).toISOString().slice(0, 10),
   );
   config.addFilter("json", (value) => JSON.stringify(value));
+  config.addFilter("inCategory", (posts, category) =>
+    posts.filter((post) => (post.data.categories || []).includes(category)),
+  );
   config.addCollection("posts", (api) =>
     api
       .getFilteredByGlob("src/posts/*.md")
-      .filter(
-        (p) =>
-          !p.data.draft &&
-          true,
-      )
+      .filter((p) => !p.data.draft && true)
       .sort((a, b) => b.date - a.date),
   );
   config.addCollection("categories", (api) =>
@@ -38,11 +37,7 @@ module.exports = function (config) {
       ...new Set(
         api
           .getFilteredByGlob("src/posts/*.md")
-          .filter(
-            (p) =>
-              !p.data.draft &&
-              true,
-          )
+          .filter((p) => !p.data.draft && true)
           .flatMap((p) => p.data.categories || []),
       ),
     ].sort(),

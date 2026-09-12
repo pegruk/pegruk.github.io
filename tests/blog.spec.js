@@ -42,8 +42,12 @@ test("search recovers from a failed index request", async ({ page }) => {
 test("categories filter and reset; theme persists", async ({ page }) => {
   await page.goto("/");
   const articleCount = await page.locator(".post-list li:visible").count();
-  await page.getByText("Categories", { exact: true }).click();
-  await page.locator(".category-menu").getByText("Backend development").click();
+  await page.getByRole("link", { name: "Categories", exact: true }).click();
+  await expect(page).toHaveURL(/\/categories\/$/);
+  await page
+    .locator(".category-list")
+    .getByRole("link", { name: "Backend development 1 post" })
+    .click();
   await expect(page.locator(".post-list li:visible")).toHaveCount(1);
   await page.locator("#filter-status a").click();
   await expect(page.locator(".post-list li:visible")).toHaveCount(articleCount);

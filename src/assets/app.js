@@ -42,17 +42,6 @@
       empty.textContent = "No posts in this category yet.";
     }
   }
-  const menu = document.querySelector(".categories");
-  document.addEventListener("click", (event) => {
-    if (!menu.contains(event.target)) menu.open = false;
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && menu.open) {
-      menu.open = false;
-      menu.querySelector("summary").focus();
-    }
-  });
-
   const dialog = document.querySelector("#search-dialog");
   const openButton = document.querySelector("#search-open");
   const input = document.querySelector("#search-input");
