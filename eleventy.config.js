@@ -1,6 +1,9 @@
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const { feedPlugin } = require("@11ty/eleventy-plugin-rss");
 const site = require("./src/_data/site.json");
+const visiblePost = (post) =>
+  !post.data.draft &&
+  !(post.data.demo && process.env.ELEVENTY_ENV === "production");
 const markdown = require("markdown-it")({ html: true, typographer: true })
   .use(require("markdown-it-footnote"))
   .use(require("markdown-it-texmath"), {
@@ -78,14 +81,14 @@ module.exports = function (config) {
   config.addCollection("posts", (api) =>
     api
       .getFilteredByGlob("src/posts/*.md")
-      .filter((p) => !p.data.draft && true)
+      .filter(visiblePost)
       .sort((a, b) => b.date - a.date),
   );
   // The RSS plugin reverses its source collection before taking the newest 20.
   config.addCollection("feedPosts", (api) =>
     api
       .getFilteredByGlob("src/posts/*.md")
-      .filter((post) => !post.data.draft)
+      .filter(visiblePost)
       .sort((a, b) => a.date - b.date),
   );
   config.addCollection("categories", (api) =>
@@ -93,7 +96,7 @@ module.exports = function (config) {
       ...new Set(
         api
           .getFilteredByGlob("src/posts/*.md")
-          .filter((p) => !p.data.draft && true)
+          .filter(visiblePost)
           .flatMap((p) => p.data.categories || []),
       ),
     ].sort(),

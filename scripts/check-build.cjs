@@ -41,7 +41,7 @@ try {
   );
   run("scripts/build.cjs", { PATH_PREFIX: "/blog/" });
   assert(
-    fs.existsSync(
+    !fs.existsSync(
       path.join(temp, "_site/posts/looking-inside-a-model/index.html"),
     ),
   );
@@ -49,9 +49,10 @@ try {
   const index = JSON.parse(
     fs.readFileSync(path.join(temp, "_site/search.json")),
   );
-  assert.deepEqual(
-    index.map((article) => article.url).sort(),
-    previewIndex.map((article) => article.url).sort(),
+  assert(
+    previewIndex.some((article) =>
+      article.text.includes("Searchable body sentinel"),
+    ),
   );
   const published = index.find((article) =>
     article.text.includes("Searchable body sentinel"),
